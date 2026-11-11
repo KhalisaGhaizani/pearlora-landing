@@ -50,7 +50,7 @@ jobs:
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          password: ${{ secrets.GH_TOKEN }}
       - uses: docker/build-push-action@v6
         with:
           context: .
@@ -86,7 +86,7 @@ jobs:
         uses: appleboy/ssh-action@v1.2.0
         env:
           GHCR_USER: ${{ github.actor }}
-          GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GHCR_TOKEN: ${{ secrets.GH_TOKEN }}
           WEB_IMAGE: ${{ needs.image.outputs.web }}
           TAG: ${{ github.sha }}
         with:
