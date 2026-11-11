@@ -1,0 +1,360 @@
+---
+// Interactive, illustrative simulation of the Sense -> Decide -> Act -> Verify loop.
+// All numbers are made up for demonstration; see the constants in the script below.
+const steps = ['Sense', 'Decide', 'Act', 'Verify'];
+const depthTicks = [0, 3, 6, 9, 12, 15];
+const Y0 = 30;
+const PX_PER_M = 370 / 15;
+const y = (z: number) => Y0 + z * PX_PER_M;
+---
+
+<div data-depth-demo class="grid gap-6 rounded-3xl bg-white p-4 text-ink shadow-xl sm:p-6 lg:grid-cols-[1.25fr_1fr]">
+  <div>
+    <svg viewBox="0 0 640 410" class="h-auto w-full" role="img" aria-labelledby="dd-title dd-desc">
+      <title id="dd-title">Water column simulation</title>
+      <desc id="dd-desc">
+        Left: the batten with oyster baskets at its current depth. Right: temperature and dissolved oxygen by depth,
+        with the suitable layer highlighted.
+      </desc>
+      <defs>
+        <linearGradient id="dd-water" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#bfeee9"></stop>
+          <stop offset="1" stop-color="#2b7f8f"></stop>
+        </linearGradient>
+      </defs>
+
+      <rect x="60" y={Y0} width="560" height="370" rx="10" fill="url(#dd-water)"></rect>
+      <rect data-band x="60" y={Y0} width="560" height="0" fill="#3ddc84" opacity="0.32"></rect>
+      <line x1="320" y1={Y0} x2="320" y2="400" stroke="#fff" stroke-opacity="0.5" stroke-dasharray="3 5"></line>
+
+      {
+        depthTicks.map((d) => (
+          <g>
+            <line x1="54" x2="60" y1={y(d)} y2={y(d)} stroke="#10243a" />
+            <text x="50" y={y(d) + 6} text-anchor="end" font-size="17" font-weight="600" fill="#10243a">
+              {d} m
+            </text>
+          </g>
+        ))
+      }
+
+      <!-- batten side -->
+      <text x="190" y="21" text-anchor="middle" font-size="15" font-weight="700" fill="#10243a">YOUR LONGLINE</text>
+      <line data-target x1="70" x2="310" y1="0" y2="0" stroke="#0c3140" stroke-width="2" stroke-dasharray="6 5" opacity="0"></line>
+      <text data-target-label x="314" y="0" text-anchor="end" font-size="14" font-weight="700" fill="#0c3140" opacity="0">target</text>
+      {[105, 175, 245].map((x) => <line data-lift x1={x} x2={x} y1={Y0} y2={Y0} stroke="#f2c230" stroke-width="2.5" />)}
+      <g data-batten>
+        <rect x="80" y="-4" width="190" height="8" rx="4" fill="#10243a"></rect>
+        <circle cx="270" cy="0" r="7" fill="#7fe9dc" stroke="#10243a" stroke-width="2"></circle>
+        {
+          [92, 152, 212].map((x) => (
+            <g>
+              <rect x={x} y="8" width="46" height="44" rx="4" fill="#0c3140" fill-opacity="0.25" stroke="#10243a" stroke-width="1.5" />
+              <ellipse cx={x + 14} cy="24" rx="8" ry="6" fill="#c9b58a" />
+              <ellipse cx={x + 31} cy="27" rx="8" ry="6" fill="#b89f6e" />
+              <ellipse cx={x + 22} cy="41" rx="9" ry="6" fill="#d6c59d" />
+            </g>
+          ))
+        }
+      </g>
+
+      <!-- profile side -->
+      <text x="470" y="21" text-anchor="middle" font-size="15" font-weight="700" fill="#10243a">WATER PROFILE</text>
+      <path data-temp fill="none" stroke="#f0672b" stroke-width="3.5" stroke-linecap="round"></path>
+      <path data-oxy fill="none" stroke="#2f6fe0" stroke-width="3.5" stroke-linecap="round"></path>
+      <circle data-temp-dot r="6" fill="#f0672b" stroke="#fff" stroke-width="2"></circle>
+      <circle data-oxy-dot r="6" fill="#2f6fe0" stroke="#fff" stroke-width="2"></circle>
+
+    </svg>
+    <ul class="mt-3 flex flex-wrap gap-x-5 gap-y-1 text-xs font-bold">
+      <li class="flex items-center gap-1.5"><span class="h-3 w-3 rounded-sm bg-[#3ddc84]/60"></span>Suitable layer</li>
+      <li class="flex items-center gap-1.5"><span class="h-3 w-3 rounded-full bg-heat"></span>Temperature (°C)</li>
+      <li class="flex items-center gap-1.5"><span class="h-3 w-3 rounded-full bg-oxy"></span>Dissolved O₂ (mg/L)</li>
+    </ul>
+    <p class="mt-2 text-xs italic text-ink/60">
+      Illustrative simulation with made-up thresholds. Not site measurements.
+    </p>
+  </div>
+
+  <div class="flex flex-col gap-5">
+    <ol class="grid grid-cols-4 gap-1.5 text-center text-xs font-bold uppercase tracking-wide">
+      {
+        steps.map((s, i) => (
+          <li data-step={s.toLowerCase()} class="rounded-full border border-ink/15 px-1 py-2 text-ink/50 transition-colors">
+            <span class="hidden sm:inline">0{i + 1} </span>
+            {s}
+          </li>
+        ))
+      }
+    </ol>
+
+    <div class="space-y-4">
+      <label class="block">
+        <span class="flex justify-between text-sm font-semibold">
+          <span>Surface water temperature</span>
+          <output data-out="ts" class="tabular-nums text-heat"></output>
+        </span>
+        <input data-in="ts" type="range" min="28" max="33" step="0.1" value="31.5" class="mt-2 w-full accent-heat" />
+      </label>
+      <label class="block">
+        <span class="flex justify-between text-sm font-semibold">
+          <span>Deep-water dissolved oxygen</span>
+          <output data-out="dd" class="tabular-nums text-oxy"></output>
+        </span>
+        <input data-in="dd" type="range" min="2" max="6" step="0.1" value="3" class="mt-2 w-full accent-oxy" />
+      </label>
+    </div>
+
+    <dl class="grid grid-cols-3 gap-2 text-center">
+      <div class="rounded-xl bg-foam p-3">
+        <dt class="text-[11px] font-semibold uppercase tracking-wide text-ink/60">Batten depth</dt>
+        <dd data-read="depth" class="text-xl font-extrabold tabular-nums"></dd>
+      </div>
+      <div class="rounded-xl bg-foam p-3">
+        <dt class="text-[11px] font-semibold uppercase tracking-wide text-ink/60">Temp there</dt>
+        <dd data-read="temp" class="text-xl font-extrabold tabular-nums"></dd>
+      </div>
+      <div class="rounded-xl bg-foam p-3">
+        <dt class="text-[11px] font-semibold uppercase tracking-wide text-ink/60">O₂ there</dt>
+        <dd data-read="oxy" class="text-xl font-extrabold tabular-nums"></dd>
+      </div>
+    </dl>
+
+    <div class="rounded-xl border border-ink/10 p-4" aria-live="polite">
+      <p class="text-xs font-bold uppercase tracking-wide text-teal">Recommendation</p>
+      <p data-advice class="mt-1 min-h-[4.5rem] text-sm leading-relaxed"></p>
+      <div class="mt-3 flex flex-wrap gap-2">
+        <button
+          data-approve
+          type="button"
+          class="btn bg-deep text-white hover:bg-tide disabled:cursor-not-allowed disabled:bg-ink/20 disabled:text-ink/50"
+        ></button>
+        <button data-reset type="button" class="btn border border-ink/20 text-ink hover:bg-foam">Reset</button>
+      </div>
+    </div>
+
+    <div>
+      <p class="text-xs font-bold uppercase tracking-wide text-ink/60">Intervention log</p>
+      <ul data-log class="mt-2 space-y-1.5 text-sm">
+        <li class="text-ink/50">No movements yet.</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ---- Illustrative model. None of these values are site data. ----
+  const T_DEEP = 26.5; // deg C below the thermocline
+  const DO_SURF = 6.6; // mg/L near the surface
+  const T_MAX = 29.5; // "too warm" above this
+  const DO_MIN = 4.5; // "too little oxygen" below this
+  const Z_MIN = 3; // shallowest allowed batten depth (m)
+  const Z_MAX = 12; // deepest allowed batten depth (m)
+  const STEP = 0.5;
+  const START_DEPTH = 4;
+  const SPEED = 1.6; // m per second in the animation
+
+  const Y0 = 30;
+  const PX = 370 / 15;
+  const yOf = (z: number) => Y0 + z * PX;
+  const xTemp = (t: number) => 335 + ((t - 25) / 9) * 270; // 25..34 deg C
+  const xOxy = (o: number) => 335 + (o / 8) * 270; // 0..8 mg/L
+
+  const temp = (z: number, ts: number) => T_DEEP + (ts - T_DEEP) / (1 + Math.exp((z - 6) / 1.6));
+  const oxy = (z: number, dd: number) => DO_SURF - (DO_SURF - dd) / (1 + Math.exp(-(z - 10) / 1.6));
+  const fmt = (n: number) => n.toFixed(1);
+
+  type Phase = 'idle' | 'moving' | 'verified';
+
+  function init(root: HTMLElement) {
+    const q = <T extends Element>(s: string) => root.querySelector(s) as T;
+    const inTs = q<HTMLInputElement>('[data-in="ts"]');
+    const inDd = q<HTMLInputElement>('[data-in="dd"]');
+    const approve = q<HTMLButtonElement>('[data-approve]');
+    const log = q<HTMLUListElement>('[data-log]');
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+    let depth = START_DEPTH;
+    let phase: Phase = 'idle';
+    let target: number | null = null;
+
+    const suitable = (z: number, ts: number, dd: number) => temp(z, ts) <= T_MAX && oxy(z, dd) >= DO_MIN;
+
+    function decide(ts: number, dd: number) {
+      const zs: number[] = [];
+      for (let z = Z_MIN; z <= Z_MAX + 1e-9; z += STEP) zs.push(Math.round(z * 2) / 2);
+      const ok = zs.filter((z) => suitable(z, ts, dd));
+      if (ok.length === 0) {
+        const stress = (z: number) => Math.max(0, temp(z, ts) - T_MAX) + Math.max(0, DO_MIN - oxy(z, dd));
+        const best = zs.reduce((a, b) => (stress(b) < stress(a) ? b : a));
+        return { band: null as [number, number] | null, target: best, none: true };
+      }
+      // Stay one step inside the layer when it is wide enough, then move as little as possible.
+      const inner = ok.length > 2 ? ok.slice(1, -1) : ok;
+      const best = inner.reduce((a, b) => (Math.abs(b - depth) < Math.abs(a - depth) ? b : a));
+      return { band: [ok[0], ok[ok.length - 1]] as [number, number], target: best, none: false };
+    }
+
+    function path(fn: (z: number) => number) {
+      let d = '';
+      for (let z = 0; z <= 15; z += 0.25) d += `${z === 0 ? 'M' : 'L'}${fn(z).toFixed(1)} ${yOf(z).toFixed(1)}`;
+      return d;
+    }
+
+    function setSteps(active: string) {
+      root.querySelectorAll<HTMLElement>('[data-step]').forEach((el) => {
+        const on = el.dataset.step === active;
+        el.classList.toggle('bg-deep', on);
+        el.classList.toggle('text-white', on);
+        el.classList.toggle('border-deep', on);
+        el.classList.toggle('text-ink/50', !on);
+      });
+    }
+
+    function render() {
+      const ts = Number(inTs.value);
+      const dd = Number(inDd.value);
+      q<HTMLOutputElement>('[data-out="ts"]').textContent = `${fmt(ts)} °C`;
+      q<HTMLOutputElement>('[data-out="dd"]').textContent = `${fmt(dd)} mg/L`;
+
+      q<SVGPathElement>('[data-temp]').setAttribute('d', path((z) => xTemp(temp(z, ts))));
+      q<SVGPathElement>('[data-oxy]').setAttribute('d', path((z) => xOxy(oxy(z, dd))));
+
+      const yb = yOf(depth);
+      q<SVGGElement>('[data-batten]').setAttribute('transform', `translate(0 ${yb.toFixed(1)})`);
+      root.querySelectorAll('[data-lift]').forEach((l) => l.setAttribute('y2', yb.toFixed(1)));
+      const tHere = temp(depth, ts);
+      const oHere = oxy(depth, dd);
+      const td = q<SVGCircleElement>('[data-temp-dot]');
+      td.setAttribute('cx', xTemp(tHere).toFixed(1));
+      td.setAttribute('cy', yb.toFixed(1));
+      const od = q<SVGCircleElement>('[data-oxy-dot]');
+      od.setAttribute('cx', xOxy(oHere).toFixed(1));
+      od.setAttribute('cy', yb.toFixed(1));
+
+      q('[data-read="depth"]').textContent = `${fmt(depth)} m`;
+      q('[data-read="temp"]').textContent = `${fmt(tHere)} °C`;
+      q('[data-read="oxy"]').textContent = `${fmt(oHere)}`;
+
+      const plan = decide(ts, dd);
+      const band = q<SVGRectElement>('[data-band]');
+      if (plan.band) {
+        band.setAttribute('y', yOf(plan.band[0] - STEP / 2).toFixed(1));
+        band.setAttribute('height', ((plan.band[1] - plan.band[0] + STEP) * PX).toFixed(1));
+      } else {
+        band.setAttribute('height', '0');
+      }
+
+      if (phase === 'moving') return;
+
+      const here = Math.round(depth * 2) / 2;
+      const holdOk = suitable(here, ts, dd);
+      const needsMove = !holdOk && plan.target !== here;
+      target = needsMove ? plan.target : null;
+
+      const tl = q<SVGLineElement>('[data-target]');
+      const tt = q<SVGTextElement>('[data-target-label]');
+      if (target !== null) {
+        const yt = yOf(target);
+        tl.setAttribute('y1', String(yt));
+        tl.setAttribute('y2', String(yt));
+        tt.setAttribute('y', String(yt - 5));
+      }
+      tl.setAttribute('opacity', target !== null ? '1' : '0');
+      tt.setAttribute('opacity', target !== null ? '1' : '0');
+
+      const advice = q<HTMLElement>('[data-advice]');
+      if (target === null) {
+        approve.disabled = true;
+        approve.textContent = 'No move needed';
+        if (phase === 'verified') {
+          advice.textContent = `Verified. The on-batten node confirms ${fmt(depth)} m at ${fmt(tHere)} °C and ${fmt(oHere)} mg/L. Try changing the water again.`;
+          setSteps('verify');
+        } else if (holdOk) {
+          advice.textContent = `Conditions at ${fmt(depth)} m are within thresholds. Hold position and keep sensing.`;
+          setSteps('sense');
+        } else {
+          advice.textContent = `No layer meets both thresholds and ${fmt(depth)} m is already the least-stress depth. Flagged for operator review.`;
+          setSteps('decide');
+        }
+        return;
+      }
+
+      const why =
+        tHere > T_MAX && oHere < DO_MIN
+          ? 'too warm and low in oxygen'
+          : tHere > T_MAX
+            ? `too warm (${fmt(tHere)} °C)`
+            : `low in oxygen (${fmt(oHere)} mg/L)`;
+      advice.textContent = plan.none
+        ? `Water at ${fmt(depth)} m is ${why}. No layer meets both thresholds; least-stress depth is ${fmt(target)} m. Operator review advised before moving.`
+        : `Water at ${fmt(depth)} m is ${why}. A suitable layer sits at ${fmt(plan.band![0])} to ${fmt(plan.band![1])} m. Recommended target: ${fmt(target)} m.`;
+      approve.disabled = false;
+      approve.textContent = `Approve move to ${fmt(target)} m`;
+      setSteps('decide');
+    }
+
+    function addLog(text: string) {
+      if (log.firstElementChild?.classList.contains('text-ink/50')) log.innerHTML = '';
+      const li = document.createElement('li');
+      li.className = 'rounded-lg bg-foam px-3 py-2';
+      li.textContent = text;
+      log.prepend(li);
+      while (log.children.length > 3) log.lastElementChild?.remove();
+    }
+
+    function finish(from: number, to: number) {
+      depth = to;
+      phase = 'verified';
+      const ts = Number(inTs.value);
+      const dd = Number(inDd.value);
+      addLog(`${fmt(from)} m → ${fmt(to)} m. Node confirms ${fmt(to)} m, ${fmt(temp(to, ts))} °C, ${fmt(oxy(to, dd))} mg/L O₂.`);
+      inTs.disabled = inDd.disabled = false;
+      render();
+    }
+
+    approve.addEventListener('click', () => {
+      if (target === null || phase === 'moving') return;
+      const from = depth;
+      const to = target;
+      phase = 'moving';
+      approve.disabled = true;
+      approve.textContent = 'Winch moving…';
+      inTs.disabled = inDd.disabled = true;
+      q<HTMLElement>('[data-advice]').textContent = `Operator approved. Winch repositioning the batten from ${fmt(from)} m to ${fmt(to)} m within motion limits.`;
+      setSteps('act');
+      if (reduced.matches) return finish(from, to);
+      const duration = (Math.abs(to - from) / SPEED) * 1000;
+      const t0 = performance.now();
+      const tick = (now: number) => {
+        const p = Math.min(1, (now - t0) / duration);
+        const e = p < 0.5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2;
+        depth = from + (to - from) * e;
+        render();
+        if (p < 1) requestAnimationFrame(tick);
+        else finish(from, to);
+      };
+      requestAnimationFrame(tick);
+    });
+
+    const onInput = () => {
+      if (phase === 'verified') phase = 'idle';
+      render();
+    };
+    inTs.addEventListener('input', onInput);
+    inDd.addEventListener('input', onInput);
+    q<HTMLButtonElement>('[data-reset]').addEventListener('click', () => {
+      if (phase === 'moving') return;
+      depth = START_DEPTH;
+      phase = 'idle';
+      inTs.value = '31.5';
+      inDd.value = '3';
+      log.innerHTML = '<li class="text-ink/50">No movements yet.</li>';
+      render();
+    });
+
+    render();
+  }
+
+  document.querySelectorAll<HTMLElement>('[data-depth-demo]').forEach(init);
+</script>

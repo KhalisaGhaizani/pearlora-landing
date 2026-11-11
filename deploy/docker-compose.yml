@@ -1,0 +1,8 @@
+# Runs on the VPS. CI copies this file to ~/pearlora-web and writes .env with
+# WEB_IMAGE and TAG. Bound to localhost: the host's Caddy proxies to it.
+services:
+  web:
+    image: ${WEB_IMAGE}:${TAG:-latest}
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:8082:8080"

@@ -1,0 +1,445 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import DepthDemo from '../components/DepthDemo.astro';
+import { DEMO_MAILTO, PRICING } from '../config';
+
+import logoColor from '../assets/logo-color.png';
+import logoWhite from '../assets/logo-white.png';
+import heroCages from '../assets/hero-cages.jpg';
+import farmSea from '../assets/farm-sea.jpg';
+import systemUnderwater from '../assets/system-underwater.jpg';
+import hwDeployed from '../assets/hw-deployed.jpg';
+import hwPontoon from '../assets/hw-pontoon.jpg';
+import hwEnclosure from '../assets/hw-enclosure.jpg';
+import hwSensorMount from '../assets/hw-sensor-mount.jpg';
+import dashboard from '../assets/dashboard.jpg';
+
+const nav = [
+  { href: '#problem', label: 'The problem' },
+  { href: '#how', label: 'How it works' },
+  { href: '#demo', label: 'Try it' },
+  { href: '#system', label: 'The system' },
+  { href: '#pricing', label: 'Pricing' },
+];
+
+const depthFacts = [
+  {
+    title: 'The water column is layered',
+    body: 'Surface water may be warmer, with cooler water below the thermocline. The layering varies by site and season.',
+    source: 'NOAA Ocean Service',
+  },
+  {
+    title: 'Heat stresses Pinctada maxima',
+    body: 'Controlled marine-heatwave experiments found physiological stress and rising mortality at severe temperatures.',
+    source: 'Xu et al., 2021',
+  },
+  {
+    title: 'Depth and season interact',
+    body: 'A field study in North Lombok linked juvenile oyster survival to both the season and the culture depth.',
+    source: 'Hamzah & Nababan, 2011',
+  },
+];
+
+const loop = [
+  {
+    n: '01',
+    name: 'Sense',
+    body: 'A fixed water-profile sensor maps temperature, dissolved oxygen, salinity, pH and turbidity across depth.',
+    out: 'Water-column profile',
+  },
+  {
+    n: '02',
+    name: 'Decide',
+    body: 'Software identifies a preferred depth from your site thresholds and the current water. Your operator reviews the recommendation.',
+    out: 'Approved target depth',
+  },
+  {
+    n: '03',
+    name: 'Act',
+    body: 'The controller drives the winch to reposition the batten and pocket nets. Motion limits protect the line-set.',
+    out: 'Adjusted basket depth',
+  },
+  {
+    n: '04',
+    name: 'Verify',
+    body: 'A node on the batten checks the achieved depth and local conditions. The dashboard records the response and flags deviations.',
+    out: 'Verified position and log',
+  },
+];
+
+const hardware = [
+  {
+    img: hwPontoon,
+    name: 'Control pontoon and winch',
+    body: 'A floating control unit with a grooved winch drum that pays every lift line out equally, so the batten stays level. Solar powered, with battery backup.',
+  },
+  {
+    img: hwEnclosure,
+    name: 'Controller enclosure',
+    body: 'Sealed, IP-rated electronics that decide locally and send data to shore. Limit switches, an emergency stop and a manual override stay in your hands.',
+  },
+  {
+    img: hwSensorMount,
+    name: 'Batten and verification node',
+    body: 'Your pocket nets hang from an adjustable batten. A node on the batten reports its real depth after every move.',
+  },
+];
+
+const software = [
+  ['Real-time water monitoring', 'Water quality by depth, updated through the day.'],
+  ['Suitability assessment', 'Each depth is scored against the biological needs of your oysters and your site thresholds.'],
+  ['Adaptive depth control', 'A recommended target depth that only moves after an operator approves it.'],
+  ['Intervention verification', 'Before-and-after readings for every move, kept as a history.'],
+  ['Maintenance advisories', 'Reminders for biofouling cleaning, oyster checks and sensor calibration.'],
+];
+
+const sources = [
+  'Atlas Pearls Ltd., Annual Reports FY25 and FY26.',
+  'NOAA, Ocean Acidification; NOAA Ocean Service, Thermocline and Dissolved Oxygen.',
+  'Marine Environmental Research 215 (2026), 107821.',
+  'Xu et al. (2021), Marine Pollution Bulletin, doi:10.1016/j.marpolbul.2021.112932.',
+  'Hamzah & Nababan (2011), doi:10.29244/jitkt.v3i2.7821.',
+  'Ministry of Marine Affairs and Fisheries (KKP), 2024 pearl export data (2025 release); ASBUMI (2026).',
+];
+---
+
+<Base>
+  <header class="sticky top-0 z-40 border-b border-ink/10 bg-white/95 backdrop-blur">
+    <div class="container-x flex h-16 items-center justify-between gap-4">
+      <a href="#top" class="shrink-0" aria-label="Pearlora home">
+        <Image src={logoColor} alt="Pearlora" height={44} class="h-11 w-auto" loading="eager" />
+      </a>
+      <nav aria-label="Main" class="hidden items-center gap-7 text-sm font-semibold text-ink/80 md:flex">
+        {nav.map((n) => <a href={n.href} class="hover:text-teal">{n.label}</a>)}
+      </nav>
+      <a href={DEMO_MAILTO} class="btn bg-deep px-5 py-2.5 text-white hover:bg-tide">Request a demo</a>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- Hero -->
+    <section id="top" class="relative isolate overflow-hidden bg-abyss text-white">
+      <Image
+        src={heroCages}
+        alt=""
+        widths={[640, 1024, 1400]}
+        sizes="(min-width: 1024px) 55vw, 100vw"
+        loading="eager"
+        fetchpriority="high"
+        class="absolute inset-y-0 right-0 -z-10 h-full w-full object-cover opacity-40 lg:w-[58%] lg:opacity-100"
+      />
+      <div class="absolute inset-0 -z-10 bg-gradient-to-r from-abyss via-abyss/90 to-abyss/10 max-lg:via-abyss/70"></div>
+      <div class="container-x py-20 sm:py-28 lg:py-36">
+        <p class="inline-flex items-center gap-2 rounded-full border border-mint/40 bg-mint/10 px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-mint">
+          <span class="h-2 w-2 rounded-full bg-mint"></span>
+          In development · now seeking pilot farms
+        </p>
+        <h1 class="mt-6 max-w-3xl text-4xl font-extrabold leading-[1.05] tracking-tight text-balance sm:text-6xl">
+          We cannot control the ocean.
+          <span class="block text-mint">But we can change how we respond.</span>
+        </h1>
+        <p class="lead text-white/85">
+          Pearlora is climate-adaptive depth management for pearl oyster farms. It reads the water at several depths,
+          recommends where your oysters are better off, moves the baskets once your operator approves, and checks the
+          result.
+        </p>
+        <div class="mt-8 flex flex-wrap gap-3">
+          <a href={DEMO_MAILTO} class="btn btn-primary">Request a demo</a>
+          <a href="#how" class="btn btn-ghost">See how it works</a>
+        </div>
+        <ul class="mt-10 flex flex-wrap gap-x-8 gap-y-2 text-sm font-semibold text-white/80">
+          <li>Existing longlines remain in place</li>
+          <li>Operator approval required</li>
+          <li>Verified after every movement</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Problem -->
+    <section id="problem" class="bg-foam py-20 sm:py-24">
+      <div class="container-x grid items-start gap-12 lg:grid-cols-[1.4fr_1fr]">
+        <div>
+          <p class="eyebrow text-teal">The problem</p>
+          <h2 class="h2">Oysters are dying, and the water is the leading suspect.</h2>
+          <p class="lead text-ink/80">
+            Atlas Pearls reported oyster mortality above historical levels at its North Bali nursery in FY25 and FY26.
+            Reviews of its hatchery procedures found no operational cause.
+          </p>
+          <blockquote class="mt-8 rounded-2xl border-l-4 border-teal bg-white p-6 shadow-sm">
+            <p class="text-lg font-semibold leading-relaxed">
+              “While no single cause has yet been isolated, current evidence suggests environmental conditions are the
+              most likely major contributor.”
+            </p>
+            <footer class="src not-italic">Atlas Pearls, FY26 Annual Report, p. 9</footer>
+          </blockquote>
+
+          <div class="mt-8 grid gap-4 sm:grid-cols-3">
+            <div class="card">
+              <p class="text-4xl font-extrabold text-teal">300K+</p>
+              <p class="mt-2 text-sm leading-relaxed">additional oysters Atlas Pearls purchased in FY25 to protect its seeding supply.</p>
+            </div>
+            <div class="card">
+              <p class="text-4xl font-extrabold text-teal">+30%</p>
+              <p class="mt-2 text-sm leading-relaxed">increase in surface-ocean acidity since pre-industrial times (pH 8.2 to 8.1). Source: NOAA.</p>
+            </div>
+            <div class="card">
+              <p class="text-4xl font-extrabold text-teal">2 forces</p>
+              <p class="mt-2 text-sm leading-relaxed">Marine heatwaves and acidification can compound physiological stress in <em>Pinctada maxima</em>.</p>
+            </div>
+          </div>
+          <p class="src">
+            Climate risk does not establish the cause of Atlas Pearls’ reported mortalities. Full sources are listed at
+            the bottom of this page.
+          </p>
+        </div>
+        <figure class="lg:sticky lg:top-24">
+          <Image
+            src={farmSea}
+            alt="A pearl farm work raft and lines of buoys on calm water below forested hills"
+            widths={[400, 720]}
+            sizes="(min-width: 1024px) 380px, 100vw"
+            class="max-h-[34rem] w-full rounded-3xl object-cover shadow-lg"
+          />
+          <figcaption class="src">
+            Knowing the water is not enough if you cannot act on it in time. Most farms still check by hand and adjust
+            depth manually, after conditions have already turned.
+          </figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- Why depth matters -->
+    <section id="depth" class="py-20 sm:py-24">
+      <div class="container-x">
+        <p class="eyebrow text-teal">Why depth matters</p>
+        <h2 class="h2">Different depths, different water.</h2>
+        <p class="lead text-ink/80">
+          Oysters a few metres apart can sit in very different temperature and oxygen conditions. The right depth today
+          may not be the right depth next week.
+        </p>
+        <div class="mt-10 grid gap-5 md:grid-cols-3">
+          {
+            depthFacts.map((f, i) => (
+              <article class="card">
+                <p class="text-sm font-extrabold text-teal">0{i + 1}</p>
+                <h3 class="mt-2 text-lg font-bold">{f.title}</h3>
+                <p class="mt-2 text-sm leading-relaxed text-ink/80">{f.body}</p>
+                <p class="src">Source: {f.source}</p>
+              </article>
+            ))
+          }
+        </div>
+        <p class="mt-8 rounded-2xl bg-deep px-6 py-5 text-lg text-white">
+          <strong class="text-mint">Key principle:</strong> deeper is not automatically safer. Measure first, then choose.
+        </p>
+      </div>
+    </section>
+
+    <!-- How it works -->
+    <section id="how" class="bg-foam py-20 sm:py-24">
+      <div class="container-x">
+        <p class="eyebrow text-teal">How Pearlora works</p>
+        <h2 class="h2">A closed loop: sense, decide, act, verify.</h2>
+        <p class="lead text-ink/80">
+          Water sensing informs an operator-approved change, followed by in-water verification.
+        </p>
+        <ol class="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          {
+            loop.map((s) => (
+              <li class="card flex flex-col">
+                <p class="flex items-center gap-3">
+                  <span class="grid h-11 w-11 place-items-center rounded-full bg-deep text-sm font-extrabold text-mint">{s.n}</span>
+                  <span class="text-xl font-extrabold uppercase tracking-wide">{s.name}</span>
+                </p>
+                <p class="mt-4 flex-1 text-sm leading-relaxed text-ink/80">{s.body}</p>
+                <p class="mt-4 rounded-lg bg-foam px-3 py-2 text-sm">
+                  <strong class="text-teal">Output:</strong> {s.out}
+                </p>
+              </li>
+            ))
+          }
+        </ol>
+        <div class="mt-8 grid gap-3 rounded-2xl bg-white p-5 text-sm shadow-sm sm:grid-cols-4">
+          <p class="font-extrabold uppercase tracking-wide text-teal">Example: 8 m to 10 m</p>
+          <p>Baskets currently at <strong>8.0 m</strong>.</p>
+          <p>A cooler layer with adequate oxygen is found near 10 m; the operator approves.</p>
+          <p>The winch adjusts and the node confirms <strong>10.0 m</strong>.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Interactive demo -->
+    <section id="demo" class="bg-abyss py-20 text-white sm:py-24">
+      <div class="container-x">
+        <p class="eyebrow text-mint">Try it yourself</p>
+        <h2 class="h2">Change the water. Watch Pearlora respond.</h2>
+        <p class="lead text-white/80">
+          Warm the surface or starve the deep water of oxygen, then approve the move the way your operator would.
+        </p>
+        <div class="mt-10">
+          <DepthDemo />
+        </div>
+      </div>
+    </section>
+
+    <!-- System -->
+    <section id="system" class="py-20 sm:py-24">
+      <div class="container-x">
+        <p class="eyebrow text-teal">The system</p>
+        <h2 class="h2">A modular retrofit for the longlines you already have.</h2>
+        <p class="lead text-ink/80">
+          Water-profile sensing, power, telemetry and winch control, fitted to your existing farm rather than replacing it.
+        </p>
+        <figure class="mt-10">
+          <Image
+            src={hwDeployed}
+            alt="Concept view of a deployed Pearlora unit: a solar-powered pontoon with a winch at the surface, a profile sensor hanging in the water, and an adjustable batten carrying oyster nets with a verification node"
+            widths={[640, 1024, 1470]}
+            sizes="(min-width: 1152px) 1104px, 100vw"
+            class="w-full rounded-3xl shadow-lg"
+          />
+          <figcaption class="src">System concept visualization. Electrical layout and load ratings to be finalized through engineering tests.</figcaption>
+        </figure>
+        <div class="mt-10 grid gap-5 md:grid-cols-3">
+          {
+            hardware.map((h) => (
+              <article class="card overflow-hidden p-0">
+                <Image src={h.img} alt="" widths={[360, 560]} sizes="(min-width: 768px) 360px, 100vw" class="h-52 w-full bg-[#dceef8] object-contain" />
+                <div class="p-6">
+                  <h3 class="text-lg font-bold">{h.name}</h3>
+                  <p class="mt-2 text-sm leading-relaxed text-ink/80">{h.body}</p>
+                </div>
+              </article>
+            ))
+          }
+        </div>
+        <Image
+          src={systemUnderwater}
+          alt="Underwater concept view: oyster baskets hanging from a batten beside a vertical water-profile sensor"
+          widths={[640, 1024, 1600]}
+          sizes="(min-width: 1152px) 1104px, 100vw"
+          class="mt-10 w-full rounded-3xl"
+        />
+      </div>
+    </section>
+
+    <!-- Software -->
+    <section id="dashboard" class="bg-foam py-20 sm:py-24">
+      <div class="container-x grid items-center gap-12 lg:grid-cols-2">
+        <div>
+          <p class="eyebrow text-teal">Dashboard and software</p>
+          <h2 class="h2">Your farm’s water, on one screen.</h2>
+          <ul class="mt-8 space-y-5">
+            {
+              software.map(([t, d]) => (
+                <li class="flex gap-4">
+                  <span class="mt-1.5 h-2.5 w-2.5 shrink-0 rounded-full bg-teal" />
+                  <p>
+                    <strong class="block">{t}</strong>
+                    <span class="text-sm leading-relaxed text-ink/80">{d}</span>
+                  </p>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+        <figure>
+          <Image
+            src={dashboard}
+            alt="Dashboard concept showing an ocean depth profile with temperature and dissolved oxygen curves and a candidate depth near 10 metres"
+            widths={[480, 670]}
+            sizes="(min-width: 1024px) 520px, 100vw"
+            class="mx-auto w-full max-w-lg rounded-2xl shadow-lg"
+          />
+          <figcaption class="src text-center">Dashboard concept.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- Before / after -->
+    <section class="py-20 sm:py-24">
+      <div class="container-x">
+        <p class="eyebrow text-teal">Before and after</p>
+        <h2 class="h2">From reactive responses to proactive climate resilience.</h2>
+        <div class="mt-10 grid gap-5 md:grid-cols-2">
+          <article class="card bg-ink/[0.03]">
+            <h3 class="text-sm font-extrabold uppercase tracking-widest text-ink/60">Today: reactive pearl farming</h3>
+            <ul class="mt-4 list-disc space-y-2 pl-5 text-ink/80">
+              <li>Water quality checked by hand, from time to time.</li>
+              <li>Oysters kept at a mostly fixed depth while the water changes around them.</li>
+              <li>Depth adjusted manually, often after conditions have already worsened.</li>
+            </ul>
+          </article>
+          <article class="card border-teal/40 bg-deep text-white">
+            <h3 class="text-sm font-extrabold uppercase tracking-widest text-mint">With Pearlora: proactive adaptation</h3>
+            <ul class="mt-4 list-disc space-y-2 pl-5 text-white/90">
+              <li>Water monitored at several depths, continuously.</li>
+              <li>A depth recommendation based on your thresholds, approved by your operator.</li>
+              <li>Baskets moved by winch, then re-measured to confirm the result.</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pricing -->
+    <section id="pricing" class="bg-foam py-20 sm:py-24">
+      <div class="container-x">
+        <p class="eyebrow text-teal">Pricing</p>
+        <h2 class="h2">Lease the hardware. Subscribe to the platform.</h2>
+        <p class="lead text-ink/80">
+          No large upfront equipment purchase. Installation, calibration, maintenance and support are part of the service.
+        </p>
+        <div class="mt-10 grid gap-5 md:grid-cols-3">
+          {
+            PRICING.map((p) => (
+              <article class="card">
+                <h3 class="text-sm font-extrabold uppercase tracking-widest text-teal">{p.name}</h3>
+                <p class="mt-4 text-5xl font-extrabold tracking-tight">{p.price}</p>
+                <p class="mt-1 text-sm font-semibold text-ink/60">{p.unit}</p>
+                <p class="mt-4 text-sm leading-relaxed text-ink/80">{p.detail}</p>
+              </article>
+            ))
+          }
+        </div>
+        <p class="src">Indicative pricing in Indonesian rupiah (M = million). To be validated with pilot farms.</p>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section id="pilot" class="bg-deep py-20 text-white sm:py-24">
+      <div class="container-x text-center">
+        <h2 class="mx-auto max-w-3xl text-3xl font-extrabold leading-tight text-balance sm:text-5xl">
+          Help us prove it on your water. <span class="text-mint">Join the pilot.</span>
+        </h2>
+        <p class="mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-white/85">
+          Pearlora is a working prototype that has not yet been validated at sea. We are looking for commercial
+          <em>P. maxima</em> grow-out farms to pilot it on a limited area, measure the results together, and shape the
+          product.
+        </p>
+        <a href={DEMO_MAILTO} class="btn btn-primary mt-8 px-8 py-4 text-base">Request a demo</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="bg-abyss py-12 text-white/70">
+    <div class="container-x grid gap-10 md:grid-cols-[1fr_2fr]">
+      <div>
+        <Image src={logoWhite} alt="Pearlora" height={72} class="h-[72px] w-auto" />
+        <p class="mt-4 text-sm">Active climate adaptation for pearl oyster farms.</p>
+        <p class="mt-6 text-xs">© {new Date().getFullYear()} Pearlora</p>
+      </div>
+      <div>
+        <h2 class="text-xs font-bold uppercase tracking-widest text-white">Sources</h2>
+        <ul class="mt-3 space-y-1.5 text-xs leading-relaxed">
+          {sources.map((s) => <li>{s}</li>)}
+        </ul>
+        <p class="mt-4 text-xs">
+          Illustrations are concept visualizations. The depth simulation on this page is illustrative and does not use
+          site measurements.
+        </p>
+      </div>
+    </div>
+  </footer>
+</Base>
