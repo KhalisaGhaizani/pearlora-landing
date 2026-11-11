@@ -61,3 +61,56 @@ body {
     @apply mt-3 text-xs italic opacity-70;
   }
 }
+
+/* ---- Story layout ---- */
+@layer components {
+  .chapter {
+    @apply flex min-h-[86svh] items-center py-24;
+  }
+  .chapter-no {
+    @apply text-xs font-bold uppercase tracking-[0.22em];
+  }
+  .statement {
+    @apply mt-5 max-w-4xl text-4xl font-extrabold leading-[1.08] tracking-tight text-balance sm:text-5xl lg:text-6xl;
+  }
+  .aside {
+    @apply mt-6 max-w-xl text-lg leading-relaxed text-pretty;
+  }
+  .more {
+    @apply mt-10 max-w-3xl rounded-2xl border border-current/15 text-sm;
+  }
+  .more > summary {
+    @apply cursor-pointer list-none px-5 py-4 font-bold select-none;
+  }
+  .more > summary::-webkit-details-marker {
+    display: none;
+  }
+  .more > summary::after {
+    content: '+';
+    @apply float-right text-lg leading-none;
+  }
+  .more[open] > summary::after {
+    content: '–';
+  }
+}
+
+/* Reveal on scroll. Only hides content when JS is running and motion is allowed. */
+@media (prefers-reduced-motion: no-preference) {
+  .js .reveal {
+    opacity: 0;
+    transform: translateY(1.5rem);
+    transition:
+      opacity 0.7s ease,
+      transform 0.7s ease;
+  }
+  .js .reveal.is-in {
+    opacity: 1;
+    transform: none;
+  }
+  .js .reveal.d1 {
+    transition-delay: 0.12s;
+  }
+  .js .reveal.d2 {
+    transition-delay: 0.24s;
+  }
+}
